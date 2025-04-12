@@ -70,7 +70,7 @@ A base conta, originalmente, com 943 observações. Dentre as observações, con
 Além disso, identificamos que os dados não foram automaticamente lidos como categóricos, assim, convertemos as variáveis qualitativas abaixo.
 
 ```{r}
-# Removendo os dados NaN
+# Removendo os dados NA
 dados <- na.omit(dados)
 
 dados$Promocoes <- as.factor(dados$Promocoes)
@@ -84,7 +84,7 @@ dadosNum <- select(dados, -c(Promocoes, Localizacao, Tipo_Supermercado))
 
 ### Observações
 
-Após a remoção das linhas com dados inválidos, ficamos com 918 observações válidas. As variáveis se distribuem em 6 variáveis quantitativas, e 3 variáveis qualitativas.
+Após a remoção das linhas com dados inválidos, ficamos com 918 observações válidas. As variáveis se distribuem em 6 variáveis quantitativas e 3 variáveis qualitativas.
 
 As variáveis qualitativas exibiram as seguintes distribuições aproximadas:
 
@@ -110,11 +110,11 @@ corr_vis
 
 Em uma análise superficial, identificamos ausência de fortes correlações entre a variável dependente `Vendas` e as outra variáveis independentes.
 
-O máximo de correlação linear observada envolvendo a variável de interesse `Vendas`, foi de 46,2% de correlação com a variável `Estoque Médio`, indicando correlação
+O máximo de correlação linear observada envolvendo a variável de interesse `Vendas`, foi de 46,2% de correlação com a variável `Estoque Médio`, indicando média correlação
 
-O máximo de correlação linear observada entre duas variáveis quaisquer foi de 93,2% entre as variáveis de `Marketing` e `Publicidade`, indicando forte correlação. Além disso, como o valor de correlação entre essas variáveis independentes é superior a 90%, isso indica a possibilidade de multicolinearidade, em que ambas as variáveis contém o mesmo nívelo de informação.
+O máximo de correlação linear observada entre duas variáveis quaisquer foi de 93,2% entre as variáveis de `Marketing` e `Publicidade`, indicando forte correlação. Além disso, como o valor de correlação entre essas variáveis independentes é superior a 90%, isso indica a possibilidade de multicolinearidade, em que ambas as variáveis contém o mesmo nível de informação.
 
-O gráfico também permite ver indícios que as variáveis apresentam distribuição normal, o que será verificado à frente quando observarmos se são válidas as suposições do MRLM.
+O gráfico também permite ver indícios de que as variáveis apresentam distribuição normal, o que será verificado à frente quando observarmos se são válidas as suposições do MRLM.
 
 #### Analisando o VIF (Variance Inflation Factor) para determinar se existe multicolinearidade
 
@@ -137,12 +137,12 @@ A partir do resultado do ajuste do primeiro modelo de regressão, podemos notar 
 
 É notável, também, que as variáveis Num_Funcionarios e Preco_Medio tem erros padrões elevados em relação aos erros das outras variáveis.
 
-Considerando nossa suspeita inicial de multicolinearidade enter as variáveis Marketing_Total e Publicidade, é possível que as mesmas tenham efeito detrimental sobre a determinação do modelo, sendo observável mais um indício de multicolinearidade que são seus sinais opostos. Assim, diagnosticamos a existência de multicolinearidade e, a seguir, selecionaremos uma delas para ser removida para verificar o impacto.
+Considerando nossa suspeita inicial de multicolinearidade entre as variáveis Marketing_Total e Publicidade, é possível que as mesmas tenham efeito detrimental sobre a determinação do modelo, sendo observável mais um indício de multicolinearidade que são seus sinais opostos, induzindo à falsa ideia de proporcinalmente inversos. Assim, diagnosticamos a existência de multicolinearidade e, a seguir, selecionaremos uma delas para ser removida para verificar o impacto.
 
 ## Ajuste de modelo removendo a variáveis
 
 ```{r}
-m2 <- update(m1, ~ . -Marketing_Total)
+m2 <- update(m1, ~ . -Marketing_Total) # Modelo sem dados de marketing
 
 summary(m2)
 ```
@@ -152,7 +152,7 @@ vif(m2)
 ```
 
 ```{r}
-m3 <- update(m1, ~ . -Publicidade)
+m3 <- update(m1, ~ . -Publicidade) # Modelo sem dados de publicidade
 
 summary(m3)
 ```
@@ -232,7 +232,7 @@ AIC(m5) # modelo com todos os dados menos localização
 
 ```
 
-Entre os modelos considerados, observa-se melhore significativa (acima de 10) entre os modelos que usam dados qualitativos (m4,m5), em relação aos que não usam (m1,m2). Os modelos com dados quantitativos não apresentam diferença significativa entre si, e escolhemos arbitrariamente o modelo M5 pela simplicidade adicional.
+Entre os modelos considerados, observa-se melhora significativa (redução de pelo menos 10 unidades) entre os modelos que usam dados qualitativos (m4,m5), em relação aos que não usam (m1,m2). Os modelos com dados quantitativos não apresentam diferença significativa entre si, e escolhemos arbitrariamente o modelo M5 pela simplicidade adicional.
 
 ## Tabela ANOVA
 
@@ -240,7 +240,7 @@ Entre os modelos considerados, observa-se melhore significativa (acima de 10) en
 anova(m4, m5)
 ```
 
-Considerando que o p-valor obtido (0.6489) é superior ao nível de significância determinado ao início do relatório, determinamos que a inclusão da variável `Localizacao` não traz impacto significativo para o modelo de regressão. Assim, pelo princípio da parcimônia, optamos por selecionar o modelo mais simples, sem `Localizacao,` o m5.
+Considerando que o p-valor obtido (0.6489) é superior ao nível de significância determinado ao início do relatório, estabelecemos que a inclusão da variável `Localizacao` não traz impacto significativo para o modelo de regressão. Assim, pelo princípio da parcimônia, optamos por selecionar o modelo mais simples, sem `Localizacao,` o m5.
 
 # Modelo selecionado: M5
 
