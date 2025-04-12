@@ -1,6 +1,6 @@
 ---
 title: "Predição de Vendas de Supermercado"
-author: ""
+author: "Maria Helena Sátyro Gomes Alves (122 110 164) | Yohan Lopes Rodrigues (122 210 318)"
 format: html
 number-sections: true
 toc: true
@@ -28,7 +28,7 @@ Por meio deste relatório, pretendemos realizar uma análise sobre a relação e
 library(readxl)
 library(dplyr)
 
-Vendas_supermercado <- read_excel("Vendas supermercado.xlsx")
+Vendas_supermercado <- read_excel("database.csv")
 
 glimpse(Vendas_supermercado)
 ```
