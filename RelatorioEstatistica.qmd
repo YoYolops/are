@@ -22,7 +22,7 @@ Por meio deste relatório, pretendemos, realizar uma análise sobre a relação 
 
 Usaremos nível de significância 10% ao longo desse relatório.
 
-## O banco de dados
+# O banco de dados
 
 ```{r}
 library(readxl)
@@ -45,9 +45,7 @@ Na base importada, as seguintes variáveis estão registradas:
 -   `Vendas_supermercado.Localizacao`: Qualitativa Nominal. Área do município em que o supermercado está localizado: Bairro, Centro ou Zona Rural;
 -   `Vendas_supermercado.Tipo_Supermercado`: Qualitativa Ordinal. Porte do supermercado: grande, médio ou pequeno.
 
-## 
-
-# Análise Exploratória
+## Análise Exploratória
 
 ```{r}
 library(skimr)
@@ -57,7 +55,7 @@ dados <- dados <- Vendas_supermercado %>% select(Vendas, everything())
 skim(dados)
 ```
 
-### Limpeza de dados
+#### Limpeza de dados
 
 A base conta, originalmente, com 943 observações. Dentre as observações, constatamos a ausência de alguns valores (dados NA), as quais serão removidas, a saber:
 
@@ -82,7 +80,7 @@ skim(dados)
 dadosNum <- select(dados, -c(Promocoes, Localizacao, Tipo_Supermercado))
 ```
 
-### Observações
+#### Observações
 
 Após a remoção das linhas com dados inválidos, ficamos com 918 observações válidas. As variáveis se distribuem em 6 variáveis quantitativas e 3 variáveis qualitativas.
 
@@ -96,7 +94,7 @@ As variáveis qualitativas exibiram as seguintes distribuições aproximadas:
 
 Separamos os dados numéricos dos dados qualitativos para observar as correlações entre variáveis. O plot abaixo traz uma visualização conveniente dos dados.
 
-## Análise de correlação
+### Análise de correlação
 
 ```{r}
 library(GGally)
@@ -106,7 +104,7 @@ corr_vis
 
 ```
 
-### Observações
+#### Observações
 
 Em uma análise superficial, identificamos ausência de fortes correlações entre a variável dependente `Vendas` e as outra variáveis independentes.
 
@@ -116,7 +114,11 @@ O máximo de correlação linear observada entre duas variáveis quaisquer foi d
 
 O gráfico também permite ver indícios de que as variáveis apresentam distribuição normal, o que será verificado à frente quando observarmos se são válidas as suposições do MRLM.
 
-#### Analisando o VIF (Variance Inflation Factor) para determinar se existe multicolinearidade
+# Ajustando os modelos
+
+## Modelo Inicial M1 - Todos os dados numéricos
+
+### Analisando o VIF (Variance Inflation Factor) para determinar se existe multicolinearidade
 
 ```{r}
 library(car)
@@ -127,7 +129,7 @@ vif(m1)
 
 Seguindo o que foi apontado anteriormente, pode-se observar VIF superior a 5 para as variáveis `Publicidade` e `Marketing_Total`. Isso indica possibilidade de multicolinearidade entre as mesmas. A seguir, realizaremos o ajuste do modelo de regressão linear múltipla, e avaliaremos a necessidade de remover uma das variáveis.
 
-## Ajuste do Modelo Inicial
+### Resumo do Modelo Inicial M1
 
 ```{r}
 summary(m1)
@@ -139,7 +141,7 @@ A partir do resultado do ajuste do primeiro modelo de regressão, podemos notar 
 
 Considerando nossa suspeita inicial de multicolinearidade entre as variáveis Marketing_Total e Publicidade, é possível que as mesmas tenham efeito detrimental sobre a determinação do modelo, sendo observável mais um indício de multicolinearidade que são seus sinais opostos, induzindo à falsa ideia de proporcinalmente inversos. Assim, diagnosticamos a existência de multicolinearidade e, a seguir, selecionaremos uma delas para ser removida para verificar o impacto.
 
-## Ajuste de modelo removendo a variáveis
+## M2 e M3 - Ajuste de modelo com dados numéricos
 
 ```{r}
 m2 <- update(m1, ~ . -Marketing_Total) # Modelo sem dados de marketing
@@ -161,11 +163,11 @@ summary(m3)
 vif(m3)
 ```
 
-#### Comentário
+### Comentário
 
 Pode-se observar que para ambos os modelos, os valores de VIF foram reduzidos em relação ao modelo inicial. Desta forma selecionaremos o modelo `m2`, sem a variável `Marketing`, pois este apresentou uma performance ligeiramente melhor em relação ao R-Squared (0.36 versus 0.33). Também observamos que as variáveis restantes não apresentam multicolinearidade.
 
-## Regressão considerando variáveis Qualitativas
+## M4 e M4 - Modelo considerando variáveis Qualitativas
 
 É possível que nosso modelo seja impactado por diferenças de correlação causadas por variáveis qualitativas. Para verificar se esse é o caso, examinaremos agora os dados em relação às mesmas.
 
@@ -198,7 +200,7 @@ graf2 <- ggpairs(tipoMercado, columns = 1:ncol(tipoMercado), ggplot2::aes(colour
 print(graf2)
 ```
 
-### Criando o modelo e analisando o VIF
+### Análise do VIF
 
 ```{r}
 m4 <- lm(Vendas ~ ., data = dados %>% select(-c(Marketing_Total)))
@@ -276,7 +278,7 @@ library(report)
 report(m5)
 ```
 
-### Em português:
+***Em português:***
 
 Ajustamos um modelo linear (estimado usando MQO) para prever Vendas com Publicidade, Num_Funcionarios, Preco_Medio, Promocoes, Tipo_Supermercado e Estoque_Medio (fórmula: Vendas \~ Publicidade + Num_Funcionarios + Preco_Medio + Promocoes + Tipo_Supermercado + Estoque_Medio). O modelo explica uma proporção estatisticamente significativa e substancial da variância (R² = 0.40, F(7, 910) = 86.82, p \< 0.001, R² ajustado = 0.40). O intercepto do modelo, correspondendo a Publicidade = 0, Num_Funcionarios = 0, Preco_Medio = 0, Promocoes = Não, Tipo_Supermercado = Grande e Estoque_Medio = 0, está em 124.46 (IC 95% \[-1118.03, 1366.95\], t(910) = 0.20, p = 0.844). Dentro deste modelo:
 
@@ -351,7 +353,7 @@ predict(m5, novas.preditoras,
 
 Observa-se que o intervalo de predição é mais amplo do que o intervalo de confiança, pois considera a incerteza em torno de um valor individual não observado na base de dados. De acordo com os dados obtidos espera-se que um novo valor esteja entre *1732.811 e 9363.947* para a **primeira observação (1)**, esteja entre 4203.278 e 11741.000 para a **segunda observação (2)**.
 
-#### Interpretação
+***Interpretação***
 
 *Intervalo de Confiança:* A incerteza em torno do valor médio esperado é relativamente menor, com intervalos mais estreitos. Isso sugere que o modelo tem boa precisão ao estimar a média da variável resposta para as combinações de preditoras fornecidas. Já o intervalo de predição é consideravelmente mais amplo, refletindo a maior incerteza envolvida na previsão de valores individuais. Isso é esperado, pois além da variabilidade do modelo, ele também incorpora a variabilidade natural entre observações individuais.
 
