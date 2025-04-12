@@ -1,0 +1,15 @@
+{
+  "hash": "d652fc77a60e147b57a736c6774dfd35",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Predição de Vendas de Supermercado\"\nauthor: \"\"\nformat: html\nnumber-sections: true\ntoc: true\ntoc-depth: 3\nlang: pt\ndate: today\neditor: visual\n---\n\n::: {.cell}\n\n```{.r .cell-code}\n# Setup para o relatório Quarto\n\nknitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)\n```\n:::\n\n\n\n# Introdução\n\nPor meio deste relatório, pretendemos realizar uma análise sobre a relação entre diferentes variáveis em relação ao volume de vendas em supermercados.\n\n## O banco de dados\n\n``` R\n{r}\ninstall.packages(\"readxl\")\nlibrary(readxl)\ndata <- read_excel(\"Vendas supermercado.xlsx\")\n```\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

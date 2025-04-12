@@ -1,0 +1,76 @@
+---
+title: "Predição de Vendas de Supermercado"
+author: ""
+format: html
+number-sections: true
+toc: true
+toc-depth: 3
+lang: pt
+date: today
+editor: visual
+---
+
+```{r Setup}
+#| echo: true
+
+# Setup para o relatório Quarto
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Introdução
+
+Por meio deste relatório, pretendemos realizar uma análise sobre a relação entre diferentes variáveis em relação ao volume de vendas em supermercados.
+
+## O banco de dados
+
+```{r}
+library(readxl)
+library(dplyr)
+
+Vendas_supermercado <- read_excel("Vendas supermercado.xlsx")
+
+glimpse(Vendas_supermercado)
+```
+
+## Análise Exploratória
+
+```{r}
+library(skimr)
+
+dados <- dados <- Vendas_supermercado %>% select(Vendas, everything())
+
+skim(dados)
+```
+
+```{r}
+dados <- na.omit(dados)
+skim(dados)
+
+dadosNum <- select(dados, -c(Promocoes, Localizacao, Tipo_Supermercado))
+```
+
+```{r}
+library(GGally)
+
+corr_vis <- ggpairs(dadosNum, columns = 1:ncol(dadosNum))
+corr_vis
+
+```
+
+```{r}
+library(tidyr)
+library(ggplot2)
+
+dadosNum_long <- dadosNum %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
+
+
+ggplot(dadosNum_long) +
+  aes(x = variable, y = value) +
+  geom_boxplot(fill = "steelblue") +
+  facet_wrap(~ variable, scales = "free")
+  theme_minimal() +
+  labs(x = "Variables", y = "Value") +
+  coord_flip()
+```
