@@ -254,7 +254,7 @@ plot(m5)
 
 #### Residual vs Fitted
 
-O gráfico observado não apresenta fortes tendências de linearidade, e apresenta levíssimas tendências de heterocedasticidade, com a variância aumentando ao centro do eixo x. Acreditamos que a variação não tem grande impacto na predição, dado não ser acentuada, assim consideramos verificado o pressuposto de homocedasticidade.
+O gráfico observado não apresenta fortes tendências de linearidade, e apresenta levíssimas tendências de heterocedasticidade, com a variância aumentando ao centro do eixo x. Acreditamos que a variação não tem grande impacto na predição, dado não ser acentuada. Assim, consideramos verificado o pressuposto de homocedasticidade.
 
 #### QQ Plot
 
