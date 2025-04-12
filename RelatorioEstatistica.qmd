@@ -13,14 +13,14 @@ editor: visual
 ```{r Setup}
 #| echo: true
 
-# Setup para o relatório Quarto
-
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 # Introdução
 
-Por meio deste relatório, pretendemos realizar uma análise sobre a relação entre diferentes variáveis em relação ao volume de vendas em supermercados.
+Por meio deste relatório, pretendemos, realizar uma análise sobre a relação entre diferentes variáveis explicativas e o volume de vendas em supermercados, nossa variável resposta. Tentaremos prever o valor da variável **Vendas** em nosso banco de dados **Vendas Supermercado**, com base nas outras variáveis disponíveis, através de um modelo de regressão linear múltipla.
+
+Usaremos nível de significância 10% ao longo desse relatório.
 
 ## O banco de dados
 
@@ -28,12 +28,26 @@ Por meio deste relatório, pretendemos realizar uma análise sobre a relação e
 library(readxl)
 library(dplyr)
 
-Vendas_supermercado <- read_excel("database.csv")
+Vendas_supermercado <- read_excel("vendas_supermercado.xlsx")
 
 glimpse(Vendas_supermercado)
 ```
 
-## Análise Exploratória
+Na base importada, as seguintes variáveis estão registradas:
+
+-   `Vendas_supermercado.Vendas`: Quantitativa contínua. Valor bruto em vendas em reais;
+-   `Vendas_supermercado.Estoque_Medio`: Quantitativa contínua. Valor médio total das mercadorias em estoque (em reais) ao longo do tempo;
+-   `Vendas_supermercado.Publicidade`: Quantitativa Continua. Valor gasto em materiais físicos e digitais relacionados à divulgação do supermercado, em reais;
+-   `Vendas_supermercado.Marketing_Total`: Quantitativa Continua. Valor gasto em pessoal para geração de estratégias publicitárias, em reais;
+-   `Vendas_supermercado.Num_Funcionarios`: Quantitativa Discreta. Quantidade de funcionários que trabalham no supermercado;
+-   `Vendas_supermercado.Preco_Medio`: Quantitativa Continua. Valor médio de mercadorias no supermercado, em reais;
+-   `Vendas_supermercado.Promocoes`: Qualitativa Nominal. Se o supermercado realiza promoções (sim ou não);
+-   `Vendas_supermercado.Localizacao`: Qualitativa Nominal. Área do município em que o supermercado está localizado: Bairro, Centro ou Zona Rural;
+-   `Vendas_supermercado.Tipo_Supermercado`: Qualitativa Ordinal. Porte do supermercado: grande, médio ou pequeno.
+
+## 
+
+# Análise Exploratória
 
 ```{r}
 library(skimr)
@@ -43,34 +57,322 @@ dados <- dados <- Vendas_supermercado %>% select(Vendas, everything())
 skim(dados)
 ```
 
+### Limpeza de dados
+
+A base conta, originalmente, com 943 observações. Dentre as observações, constatamos a ausência de alguns valores (dados NA), as quais serão removidas, a saber:
+
+-   10 linhas sem dados de publicidade;
+
+-   10 linhas sem dados de preço médio;
+
+-   5 linhas sem dados de estoque médio;
+
+Além disso, identificamos que os dados não foram automaticamente lidos como categóricos, assim, convertemos as variáveis qualitativas abaixo.
+
 ```{r}
+# Removendo os dados NaN
 dados <- na.omit(dados)
+
+dados$Promocoes <- as.factor(dados$Promocoes)
+dados$Localizacao <- as.factor(dados$Localizacao)
+dados$Tipo_Supermercado <- as.factor(dados$Tipo_Supermercado)
+
 skim(dados)
 
 dadosNum <- select(dados, -c(Promocoes, Localizacao, Tipo_Supermercado))
 ```
 
+### Observações
+
+Após a remoção das linhas com dados inválidos, ficamos com 918 observações válidas. As variáveis se distribuem em 6 variáveis quantitativas, e 3 variáveis qualitativas.
+
+As variáveis qualitativas exibiram as seguintes distribuições aproximadas:
+
+-   71% dos supermercados realizam promoções, o restante não realiza;
+
+-   50% dos supermercados estão localizados nos centros dos municípios, 40% estão localizados nas periferias dos municípios, e os 10% restantes estão localizados nas zonas rurais;
+
+-   42% dos supermercados são de grande porte, 41% são de médio porte, e os 17% restante é de pequeno porte.
+
+Separamos os dados numéricos dos dados qualitativos para observar as correlações entre variáveis. O plot abaixo traz uma visualização conveniente dos dados.
+
+## Análise de correlação
+
 ```{r}
 library(GGally)
 
-corr_vis <- ggpairs(dadosNum, columns = 1:ncol(dadosNum))
+corr_vis <- ggpairs(dadosNum, columns = 1:ncol(dadosNum), progress = FALSE)
 corr_vis
 
 ```
 
+### Observações
+
+Em uma análise superficial, identificamos ausência de fortes correlações entre a variável dependente `Vendas` e as outra variáveis independentes.
+
+O máximo de correlação linear observada envolvendo a variável de interesse `Vendas`, foi de 46,2% de correlação com a variável `Estoque Médio`, indicando correlação
+
+O máximo de correlação linear observada entre duas variáveis quaisquer foi de 93,2% entre as variáveis de `Marketing` e `Publicidade`, indicando forte correlação. Além disso, como o valor de correlação entre essas variáveis independentes é superior a 90%, isso indica a possibilidade de multicolinearidade, em que ambas as variáveis contém o mesmo nívelo de informação.
+
+O gráfico também permite ver indícios que as variáveis apresentam distribuição normal, o que será verificado à frente quando observarmos se são válidas as suposições do MRLM.
+
+#### Analisando o VIF (Variance Inflation Factor) para determinar se existe multicolinearidade
+
 ```{r}
-library(tidyr)
-library(ggplot2)
+library(car)
+m1 <- lm(Vendas ~ ., data = dadosNum)
 
-dadosNum_long <- dadosNum %>%
-  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
-
-
-ggplot(dadosNum_long) +
-  aes(x = variable, y = value) +
-  geom_boxplot(fill = "steelblue") +
-  facet_wrap(~ variable, scales = "free")
-  theme_minimal() +
-  labs(x = "Variables", y = "Value") +
-  coord_flip()
+vif(m1)
 ```
+
+Seguindo o que foi apontado anteriormente, pode-se observar VIF superior a 5 para as variáveis `Publicidade` e `Marketing_Total`. Isso indica possibilidade de multicolinearidade entre as mesmas. A seguir, realizaremos o ajuste do modelo de regressão linear múltipla, e avaliaremos a necessidade de remover uma das variáveis.
+
+## Ajuste do Modelo Inicial
+
+```{r}
+summary(m1)
+```
+
+A partir do resultado do ajuste do primeiro modelo de regressão, podemos notar que todas as variáveis independentes parecem explicar a variável dependente Vendas. Tendo valores-p entre 0 e 0,001. No entanto, as variáveis no geral não explicam de forma significativa o valor de vendas, isso pode ser constatado através do resultado do Coefieciente de determinação ajustado (Adjusted R-Squared) que é de 0.3757.
+
+É notável, também, que as variáveis Num_Funcionarios e Preco_Medio tem erros padrões elevados em relação aos erros das outras variáveis.
+
+Considerando nossa suspeita inicial de multicolinearidade enter as variáveis Marketing_Total e Publicidade, é possível que as mesmas tenham efeito detrimental sobre a determinação do modelo, sendo observável mais um indício de multicolinearidade que são seus sinais opostos. Assim, diagnosticamos a existência de multicolinearidade e, a seguir, selecionaremos uma delas para ser removida para verificar o impacto.
+
+## Ajuste de modelo removendo a variáveis
+
+```{r}
+m2 <- update(m1, ~ . -Marketing_Total)
+
+summary(m2)
+```
+
+```{r}
+vif(m2)
+```
+
+```{r}
+m3 <- update(m1, ~ . -Publicidade)
+
+summary(m3)
+```
+
+```{r}
+vif(m3)
+```
+
+#### Comentário
+
+Pode-se observar que para ambos os modelos, os valores de VIF foram reduzidos em relação ao modelo inicial. Desta forma selecionaremos o modelo `m2`, sem a variável `Marketing`, pois este apresentou uma performance ligeiramente melhor em relação ao R-Squared (0.36 versus 0.33). Também observamos que as variáveis restantes não apresentam multicolinearidade.
+
+## Regressão considerando variáveis Qualitativas
+
+É possível que nosso modelo seja impactado por diferenças de correlação causadas por variáveis qualitativas. Para verificar se esse é o caso, examinaremos agora os dados em relação às mesmas.
+
+### Análise de Correlação
+
+```{r, fig.width=15, fig.height=10}
+
+promocoes <- dados %>% select(-c(Localizacao, Tipo_Supermercado))
+promocoes <- promocoes %>% select(-Promocoes, everything(), Promocoes)
+
+graf2 <- ggpairs(promocoes, columns = 1:ncol(promocoes), ggplot2::aes(colour=Promocoes), progress = FALSE)
+print(graf2)
+```
+
+```{r, fig.width=15, fig.height=10}
+
+localizacao <- dados %>% select(-c(Tipo_Supermercado, Promocoes))
+localizacao <- localizacao %>% select(-Localizacao, everything(), Localizacao)
+
+graf2 <- ggpairs(localizacao, columns = 1:ncol(localizacao), ggplot2::aes(colour=Localizacao), progress = FALSE)
+print(graf2)
+```
+
+```{r, fig.width=15, fig.height=10}
+
+tipoMercado <- dados %>% select(-c(Localizacao, Promocoes))
+tipoMercado <- tipoMercado %>% select(-Tipo_Supermercado, everything(), Tipo_Supermercado)
+
+graf2 <- ggpairs(tipoMercado, columns = 1:ncol(tipoMercado), ggplot2::aes(colour=Tipo_Supermercado), progress = FALSE)
+print(graf2)
+```
+
+### Criando o modelo e analisando o VIF
+
+```{r}
+m4 <- lm(Vendas ~ ., data = dados %>% select(-c(Marketing_Total)))
+
+vif(m4)
+```
+
+### Resumo do modelo
+
+```{r}
+summary(m4)
+```
+
+A partir do resumo obtido acima, verificamos que as variáveis independentes `Tipo_Supermercado` e `Promocoes`são estatisticamente significantes para a variável resposta `Vendas`, e que a variável qualitativa independente `Localizacao` é insignificante estatisticamente. Assim, removeremos a variável insignificante para simplificar o modelo.
+
+```{r}
+dados <-  dados %>% select(-c(Marketing_Total, Localizacao))
+
+m5 <- lm(Vendas ~ ., data=dados)
+```
+
+# Selecionando o melhor modelo
+
+## Medida AIC
+
+```{r}
+AIC(m1) # modelo inicial com dados numéricos
+AIC(m2) # modelo com dados numéricos removendo Marketing
+AIC(m4) # modelo com todos os dados
+AIC(m5) # modelo com todos os dados menos localização
+
+```
+
+Entre os modelos considerados, observa-se melhore significativa (acima de 10) entre os modelos que usam dados qualitativos (m4,m5), em relação aos que não usam (m1,m2). Os modelos com dados quantitativos não apresentam diferença significativa entre si, e escolhemos arbitrariamente o modelo M5 pela simplicidade adicional.
+
+## Tabela ANOVA
+
+```{r}
+anova(m4, m5)
+```
+
+Considerando que o p-valor obtido (0.6489) é superior ao nível de significância determinado ao início do relatório, determinamos que a inclusão da variável `Localizacao` não traz impacto significativo para o modelo de regressão. Assim, pelo princípio da parcimônia, optamos por selecionar o modelo mais simples, sem `Localizacao,` o m5.
+
+# Modelo selecionado: M5
+
+Tendo selecionado o modelo mais adequado disponível a partir dos dados fornecidos, realizaremos agora uma verificação dos pressupostos de um MRLM para o modelo M5.
+
+```{r}
+plot(m5)
+```
+
+### Análise de pressupostos
+
+#### Residual vs Fitted
+
+O gráfico observado não apresenta fortes tendências de linearidade, e apresenta levíssimas tendências de heterocedasticidade, com a variância aumentando ao centro do eixo x. Acreditamos que a variação não tem grande impacto na predição, dado não ser acentuada, assim consideramos verificado o pressuposto de homocedasticidade.
+
+#### QQ Plot
+
+O gráfico não tem sinal de enviesamento, sugerindo uma distribuição normal dos resíduos, sendo verificado o pressuposto.
+
+#### Scale-Location
+
+Os pontos do gráfico aparentam estar distribuídos aleatoriamente ao redor da linha do modelo, que não tem direção enviesada, indicando novamente homocedasticidade.
+
+#### Residual vs Leverage
+
+Observa-se, finalmente, boa densidade do gráfico em um cluster à esquerda, no entanto, observamos pontos abaixo de -3, que indica a existência de outliers influentes, mesmo estando abaixo da diatância de Cook. Por estarem abaixo da distância computada, consideramos que não há necessidade de correção do modelo por inconsistência da base de dados, pois os dados aparentam seguir uma variabilidade naturalmente alta.
+
+## Interpretação do modelo
+
+```{r}
+library(report)
+
+report(m5)
+```
+
+### Em português:
+
+Ajustamos um modelo linear (estimado usando MQO) para prever Vendas com Publicidade, Num_Funcionarios, Preco_Medio, Promocoes, Tipo_Supermercado e Estoque_Medio (fórmula: Vendas \~ Publicidade + Num_Funcionarios + Preco_Medio + Promocoes + Tipo_Supermercado + Estoque_Medio). O modelo explica uma proporção estatisticamente significativa e substancial da variância (R² = 0.40, F(7, 910) = 86.82, p \< 0.001, R² ajustado = 0.40). O intercepto do modelo, correspondendo a Publicidade = 0, Num_Funcionarios = 0, Preco_Medio = 0, Promocoes = Não, Tipo_Supermercado = Grande e Estoque_Medio = 0, está em 124.46 (IC 95% \[-1118.03, 1366.95\], t(910) = 0.20, p = 0.844). Dentro deste modelo:
+
+-   O efeito da Publicidade é estatisticamente significativo e positivo (beta = 0.80, IC 95% \[0.68, 0.93\], t(910) = 12.56, p \< 0.001; beta padronizado = 0.32, IC 95% \[0.27, 0.37\])
+
+-   O efeito de Num_Funcionarios é estatisticamente significativo e positivo (beta = 55.66, IC 95% \[32.68, 78.64\], t(910) = 4.75, p \< 0.001; beta padronizado = 0.12, IC 95% \[0.07, 0.17\])
+
+-   O efeito de Preco_Medio é estatisticamente significativo e negativo (beta = -107.43, IC 95% \[-132.58, -82.28\], t(910) = -8.38, p \< 0.001; beta padronizado = -0.22, IC 95% \[-0.27, -0.17\])
+
+-   O efeito de Promocoes \[Sim\] é estatisticamente significativo e positivo (beta = 298.88, IC 95% \[24.07, 573.68\], t(910) = 2.13, p = 0.033; beta padronizado = 0.12, IC 95% \[0.01, 0.23\])
+
+-   O efeito de Tipo_Supermercado \[Médio\] é estatisticamente significativo e negativo (beta = -765.04, IC 95% \[-1038.59, -491.49\], t(910) = -5.49, p \< 0.001; beta padronizado = -0.31, IC 95% \[-0.42, -0.20\])
+
+-   O efeito de Tipo_Supermercado \[Pequeno\] é estatisticamente significativo e negativo (beta = -907.38, IC 95% \[-1260.98, -553.78\], t(910) = -5.04, p \< 0.001; beta padronizado = -0.37, IC 95% \[-0.51, -0.23\])
+
+-   O efeito de Estoque_Medio é estatisticamente significativo e positivo (beta = 0.56, IC 95% \[0.49, 0.62\], t(910) = 17.15, p \< 0.001; beta padronizado = 0.44, IC 95% \[0.39, 0.49\])
+
+Os parâmetros padronizados foram obtidos ajustando o modelo a uma versão padronizada do conjunto de dados. Os Intervalos de Confiança de 95% (ICs) e os valores-p foram calculados usando uma aproximação da distribuição t de Wald.
+
+# Previsões
+
+Para realizar previsões sobre valores para a variável resposta, recomenda-se o uso de valores para as variáveis explicativas dentro dos respectivos intervalos observados. Daí a importância de um breve resumo sobre os dados observados:
+
+```{r}
+summary(dados)
+```
+
+Agora, suponha que temos por objetivo prever os valores de `Vendas` considerando os seguintes valores para as variáveis explicativas:
+
+```{r}
+novas.preditoras <- data.frame(Publicidade=c(5050, 4900),
+                               Num_Funcionarios=c(13, 25),
+                               Preco_Medio=c(10, 20),
+                               Promocoes=c('Sim', 'Não'),
+                               Tipo_Supermercado=c('Grande', 'Pequeno'),
+                               Estoque_Medio=c(2564, 10040))
+```
+
+```{r}
+novas.preditoras %>% knitr::kable()
+
+```
+
+## Predição Pontual
+
+```{r}
+predict(m5, novas.preditoras)
+
+```
+
+Acima, temos as previsões pontuais dos dados das variáveis preditoras selecionadas.
+
+## Intervalo de Confiança
+
+Um **intervalo de confiança** captura a incerteza em torno dos **valores médios (valores esperados / o parâmetro média)** preditos.
+
+```{r}
+predict(m5, novas.preditoras,
+        interval = "confidence")
+```
+
+Nota-se no intervalo de confiança obtido que para a **primeira observação (1)** o valor esperado é algo entre *4847,752 e 6251,006.* E para a **segunda** **observação (2)** o valor esperado é algo entre *7611,028 e 8333,250.*
+
+## Intervalo de Predição/Previsão
+
+Um **intervalo de predição/previsão** captura a incerteza em torno de um **único valor** não observado na base de dados e não em torno do seu **valor médio/esperado** o qual é obtido pelas variáveis preditoras observadas na base de dados.
+
+```{r}
+predict(m5, novas.preditoras,
+        interval = "prediction")
+```
+
+Observa-se que o intervalo de predição é mais amplo do que o intervalo de confiança, pois considera a incerteza em torno de um valor individual não observado na base de dados. De acordo com os dados obtidos espera-se que um novo valor esteja entre *1732.811 e 9363.947* para a **primeira observação (1)**, esteja entre 4203.278 e 11741.000 para a **segunda observação (2)**.
+
+#### Interpretação
+
+*Intervalo de Confiança:* A incerteza em torno do valor médio esperado é relativamente menor, com intervalos mais estreitos. Isso sugere que o modelo tem boa precisão ao estimar a média da variável resposta para as combinações de preditoras fornecidas. Já o intervalo de predição é consideravelmente mais amplo, refletindo a maior incerteza envolvida na previsão de valores individuais. Isso é esperado, pois além da variabilidade do modelo, ele também incorpora a variabilidade natural entre observações individuais.
+
+# Conclusão
+
+Após análise exploratória dos dados, foi constatada uma ausência de forte correlação entre as variáveis independentes disponíveis e a variável dependente `Vendas`. Além disso, foi visto um leve problema de colinearidade entre as variaveis `Publicidade` e `Marketing_Total`, além da baixa descritividade da variável `Localizacao` sobre a variável explicada.
+
+Após análise, `Marketing_Total` e `Localizacao` foram removidas para geração de modelo de regressão adequado, mas apesar de termos ajustado o modelo selecionando as variáveis que nos trouxeram melhorias em relação ao R, e dos dados seguirem os pressupostos esperados para um MRLM, nosso modelo seguiu com pouca descritividade em relação aos dados, obtendo um valor R estimado em 0.395.
+
+Isso se dá, possivelmente, ao baixo grau de correlação observado entre a variável resposta `Vendas` e as outras variáveis que a tentam explicar. Observamos um grau máximo de correlação de 0.462 entre a variável `Vendas` e a variável `Estoque_Médio`, o que faz sentido pois um supermercado que faz mais vendas possivelmente mantém um maior estoque para completar as vendas, porém não necessariamente isso descreve com grande detalhe todo o cenário de vendas do estabelecimento.
+
+Em relação às variáveis incluídas no modelo e seus impactos na previsão, temos o seguinte:
+
+-   `Tipo_Supermercado`: para os três tipos de supermercado, foi possível observar que o porte do supermercado tem grande influência no montante de vendas, o que faz sentido dado que um supermercado maior tem mais clientes e mais produtos. Em relação à base (supermercado grande), um supermercado ser médio traz um impacto de -R\$759,00 em vendas, enquanto um pequeno tem redução de R\$913,00.
+
+-   `Promocoes`: como esperado pelo bom senso, a presença de promoções em supermercados têm impacto positivo sobre as vendas. A presença de promoções têm potencial de aumentar as vendas em aproximadamente R\$: 290,00
+
+-   `Estoque_Medio`: como descrito anteriormente, um estoque maior está positivamente correlacionado com mais vendas no supermercado. Especificamente, a cada unidade adicional no estoque, pode-se esperar um aumento de R\$0.56 em vendas. O que é um valor pequeno, no entanto tende a crescer consideravelmente dado o grande volume de estoque observado na base. Por exemplo, um supermercado com o valor de estoque na média (R\$10.000,00) tem R\$5.600,00 das suas vendas explicadas apenas por estoque.
+
+-   `Num_Funcionarios`: faz sentido esperar que com mais funcionários seja possível processar mais vendas, e isso é refletido em nosso modelo, onde cada funcionário adicional potencializa mais R\$ 56.00 em vendas.
+
+-   `Publicidade`: Sendo reconhecida ferramenta de auxílio à vendas, e de acordo com a base de dados, os efeitos da publicidade nas vendas é considerável. Possivelmente indicando que no contexto de supermercados, a publicidade é fator de influência sobre o consumidor. De acordo com o modelo, cada real adicional investido tem retorno de 80 centavos. O que, assim como no estoque, é um valor pequeno mas que é relevante dado ao alto valor investido em publicidade (em média R\$5000,00, com impacto de +R\$4.000,00 em vendas)
+
+Acreditamos que apesar da baixa descritividade do modelo, foi possível tomar conclusões interessantes sobre as variáveis, observando relacionamentos significativos. Acreditamos, também, que o modelo poderia ter resultados melhores se contasse com variáveis mais descritivas e correlacionadas à variável explicada.
