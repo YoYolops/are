@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="">
+<meta name="author" content="Maria Helena Sátyro Gomes Alves (122 110 164) | Yohan Lopes Rodrigues (122 210 318)">
 
 <title>Predição de Vendas de Supermercado</title>
 <style>
@@ -80,10 +80,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução"><span class="header-section-number">1</span> Introdução</a>
+  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução"><span class="header-section-number">1</span> Introdução</a></li>
+  <li><a href="#o-banco-de-dados" id="toc-o-banco-de-dados" class="nav-link" data-scroll-target="#o-banco-de-dados"><span class="header-section-number">2</span> O banco de dados</a>
   <ul class="collapse">
-  <li><a href="#o-banco-de-dados" id="toc-o-banco-de-dados" class="nav-link" data-scroll-target="#o-banco-de-dados"><span class="header-section-number">1.1</span> O banco de dados</a></li>
+  <li><a href="#análise-exploratória" id="toc-análise-exploratória" class="nav-link" data-scroll-target="#análise-exploratória"><span class="header-section-number">2.1</span> Análise Exploratória</a>
+  <ul class="collapse">
+  <li><a href="#análise-de-correlação" id="toc-análise-de-correlação" class="nav-link" data-scroll-target="#análise-de-correlação"><span class="header-section-number">2.1.1</span> Análise de correlação</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#ajustando-os-modelos" id="toc-ajustando-os-modelos" class="nav-link" data-scroll-target="#ajustando-os-modelos"><span class="header-section-number">3</span> Ajustando os modelos</a>
+  <ul class="collapse">
+  <li><a href="#modelo-inicial-m1---todos-os-dados-numéricos" id="toc-modelo-inicial-m1---todos-os-dados-numéricos" class="nav-link" data-scroll-target="#modelo-inicial-m1---todos-os-dados-numéricos"><span class="header-section-number">3.1</span> Modelo Inicial M1 - Todos os dados numéricos</a>
+  <ul class="collapse">
+  <li><a href="#analisando-o-vif-variance-inflation-factor-para-determinar-se-existe-multicolinearidade" id="toc-analisando-o-vif-variance-inflation-factor-para-determinar-se-existe-multicolinearidade" class="nav-link" data-scroll-target="#analisando-o-vif-variance-inflation-factor-para-determinar-se-existe-multicolinearidade"><span class="header-section-number">3.1.1</span> Analisando o VIF (Variance Inflation Factor) para determinar se existe multicolinearidade</a></li>
+  <li><a href="#resumo-do-modelo-inicial-m1" id="toc-resumo-do-modelo-inicial-m1" class="nav-link" data-scroll-target="#resumo-do-modelo-inicial-m1"><span class="header-section-number">3.1.2</span> Resumo do Modelo Inicial M1</a></li>
+  </ul></li>
+  <li><a href="#m2-e-m3---ajuste-de-modelo-com-dados-numéricos" id="toc-m2-e-m3---ajuste-de-modelo-com-dados-numéricos" class="nav-link" data-scroll-target="#m2-e-m3---ajuste-de-modelo-com-dados-numéricos"><span class="header-section-number">3.2</span> M2 e M3 - Ajuste de modelo com dados numéricos</a>
+  <ul class="collapse">
+  <li><a href="#comentário" id="toc-comentário" class="nav-link" data-scroll-target="#comentário"><span class="header-section-number">3.2.1</span> Comentário</a></li>
+  </ul></li>
+  <li><a href="#m4-e-m4---modelo-considerando-variáveis-qualitativas" id="toc-m4-e-m4---modelo-considerando-variáveis-qualitativas" class="nav-link" data-scroll-target="#m4-e-m4---modelo-considerando-variáveis-qualitativas"><span class="header-section-number">3.3</span> M4 e M4 - Modelo considerando variáveis Qualitativas</a>
+  <ul class="collapse">
+  <li><a href="#análise-de-correlação-1" id="toc-análise-de-correlação-1" class="nav-link" data-scroll-target="#análise-de-correlação-1"><span class="header-section-number">3.3.1</span> Análise de Correlação</a></li>
+  <li><a href="#análise-do-vif" id="toc-análise-do-vif" class="nav-link" data-scroll-target="#análise-do-vif"><span class="header-section-number">3.3.2</span> Análise do VIF</a></li>
+  <li><a href="#resumo-do-modelo" id="toc-resumo-do-modelo" class="nav-link" data-scroll-target="#resumo-do-modelo"><span class="header-section-number">3.3.3</span> Resumo do modelo</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#selecionando-o-melhor-modelo" id="toc-selecionando-o-melhor-modelo" class="nav-link" data-scroll-target="#selecionando-o-melhor-modelo"><span class="header-section-number">4</span> Selecionando o melhor modelo</a>
+  <ul class="collapse">
+  <li><a href="#medida-aic" id="toc-medida-aic" class="nav-link" data-scroll-target="#medida-aic"><span class="header-section-number">4.1</span> Medida AIC</a></li>
+  <li><a href="#tabela-anova" id="toc-tabela-anova" class="nav-link" data-scroll-target="#tabela-anova"><span class="header-section-number">4.2</span> Tabela ANOVA</a></li>
+  </ul></li>
+  <li><a href="#modelo-selecionado-m5" id="toc-modelo-selecionado-m5" class="nav-link" data-scroll-target="#modelo-selecionado-m5"><span class="header-section-number">5</span> Modelo selecionado: M5</a>
+  <ul class="collapse">
+  <li><a href="#análise-de-pressupostos" id="toc-análise-de-pressupostos" class="nav-link" data-scroll-target="#análise-de-pressupostos"><span class="header-section-number">5.0.1</span> Análise de pressupostos</a></li>
+  <li><a href="#interpretação-do-modelo" id="toc-interpretação-do-modelo" class="nav-link" data-scroll-target="#interpretação-do-modelo"><span class="header-section-number">5.1</span> Interpretação do modelo</a></li>
+  </ul></li>
+  <li><a href="#previsões" id="toc-previsões" class="nav-link" data-scroll-target="#previsões"><span class="header-section-number">6</span> Previsões</a>
+  <ul class="collapse">
+  <li><a href="#predição-pontual" id="toc-predição-pontual" class="nav-link" data-scroll-target="#predição-pontual"><span class="header-section-number">6.1</span> Predição Pontual</a></li>
+  <li><a href="#intervalo-de-confiança" id="toc-intervalo-de-confiança" class="nav-link" data-scroll-target="#intervalo-de-confiança"><span class="header-section-number">6.2</span> Intervalo de Confiança</a></li>
+  <li><a href="#intervalo-de-prediçãoprevisão" id="toc-intervalo-de-prediçãoprevisão" class="nav-link" data-scroll-target="#intervalo-de-prediçãoprevisão"><span class="header-section-number">6.3</span> Intervalo de Predição/Previsão</a></li>
+  </ul></li>
+  <li><a href="#conclusão" id="toc-conclusão" class="nav-link" data-scroll-target="#conclusão"><span class="header-section-number">7</span> Conclusão</a></li>
   </ul>
 </nav>
 </div>
@@ -98,11 +137,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Autor</div>
+    <div class="quarto-title-meta-contents">
+             <p>Maria Helena Sátyro Gomes Alves (122 110 164) | Yohan Lopes Rodrigues (122 210 318) </p>
+          </div>
+  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Data de Publicação</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">11 de abril de 2025</p>
+      <p class="date">12 de abril de 2025</p>
     </div>
   </div>
   
@@ -115,20 +160,1051 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup para o relatório Quarto</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="introdução" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introdução</h1>
-<p>Por meio deste relatório, pretendemos realizar uma análise sobre a relação entre diferentes variáveis em relação ao volume de vendas em supermercados.</p>
-<section id="o-banco-de-dados" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="o-banco-de-dados"><span class="header-section-number">1.1</span> O banco de dados</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{r}</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"readxl"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Vendas supermercado.xlsx"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Por meio deste relatório, pretendemos, realizar uma análise sobre a relação entre diferentes variáveis explicativas e o volume de vendas em supermercados, nossa variável resposta. Tentaremos prever o valor da variável <strong>Vendas</strong> em nosso banco de dados <strong>Vendas Supermercado</strong>, com base nas outras variáveis disponíveis, através de um modelo de regressão linear múltipla.</p>
+<p>Usaremos nível de significância 10% ao longo desse relatório.</p>
 </section>
+<section id="o-banco-de-dados" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> O banco de dados</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Vendas_supermercado <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"vendas_supermercado.xlsx"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Vendas_supermercado)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 943
+Columns: 9
+$ Vendas            &lt;dbl&gt; 8590.099, 10692.601, 11344.654, 6496.962, 7327.753, …
+$ Publicidade       &lt;dbl&gt; 4439.524, NA, 6558.708, 5070.508, 5129.288, 6715.065…
+$ Num_Funcionarios  &lt;dbl&gt; 25, 31, 42, 33, 30, 35, 30, 26, 30, 31, 31, 21, 31, …
+$ Preco_Medio       &lt;dbl&gt; 19.29743, 22.27903, 14.27214, 18.75175, 17.89851, 20…
+$ Promocoes         &lt;chr&gt; "Sim", "Sim", "Sim", "Sim", "Sim", "Sim", "Sim", "Si…
+$ Localizacao       &lt;chr&gt; "Bairro", "Centro", "Bairro", "Bairro", "Bairro", "C…
+$ Tipo_Supermercado &lt;chr&gt; "Grande", "Médio", "Médio", "Pequeno", "Grande", "Pe…
+$ Estoque_Medio     &lt;dbl&gt; 8342.515, 10805.102, 12097.619, 9945.392, 11200.260,…
+$ Marketing_Total   &lt;dbl&gt; 2005.605, 2570.998, 3639.525, 2429.254, 2372.295, 34…</code></pre>
+</div>
+</div>
+<p>Na base importada, as seguintes variáveis estão registradas:</p>
+<ul>
+<li><code>Vendas_supermercado.Vendas</code>: Quantitativa contínua. Valor bruto em vendas em reais;</li>
+<li><code>Vendas_supermercado.Estoque_Medio</code>: Quantitativa contínua. Valor médio total das mercadorias em estoque (em reais) ao longo do tempo;</li>
+<li><code>Vendas_supermercado.Publicidade</code>: Quantitativa Continua. Valor gasto em materiais físicos e digitais relacionados à divulgação do supermercado, em reais;</li>
+<li><code>Vendas_supermercado.Marketing_Total</code>: Quantitativa Continua. Valor gasto em pessoal para geração de estratégias publicitárias, em reais;</li>
+<li><code>Vendas_supermercado.Num_Funcionarios</code>: Quantitativa Discreta. Quantidade de funcionários que trabalham no supermercado;</li>
+<li><code>Vendas_supermercado.Preco_Medio</code>: Quantitativa Continua. Valor médio de mercadorias no supermercado, em reais;</li>
+<li><code>Vendas_supermercado.Promocoes</code>: Qualitativa Nominal. Se o supermercado realiza promoções (sim ou não);</li>
+<li><code>Vendas_supermercado.Localizacao</code>: Qualitativa Nominal. Área do município em que o supermercado está localizado: Bairro, Centro ou Zona Rural;</li>
+<li><code>Vendas_supermercado.Tipo_Supermercado</code>: Qualitativa Ordinal. Porte do supermercado: grande, médio ou pequeno.</li>
+</ul>
+<section id="análise-exploratória" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="análise-exploratória"><span class="header-section-number">2.1</span> Análise Exploratória</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> dados <span class="ot">&lt;-</span> Vendas_supermercado <span class="sc">%&gt;%</span> <span class="fu">select</span>(Vendas, <span class="fu">everything</span>())</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(dados)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">dados</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">943</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 11%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Promocoes</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Localizacao</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo_Supermercado</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Vendas</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">8992.03</td>
+<td style="text-align: right;">2463.00</td>
+<td style="text-align: right;">646.84</td>
+<td style="text-align: right;">7340.54</td>
+<td style="text-align: right;">9072.05</td>
+<td style="text-align: right;">10620.75</td>
+<td style="text-align: right;">18123.07</td>
+<td style="text-align: left;">▁▃▇▂▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Publicidade</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">5027.31</td>
+<td style="text-align: right;">992.06</td>
+<td style="text-align: right;">2190.23</td>
+<td style="text-align: right;">4388.83</td>
+<td style="text-align: right;">5020.98</td>
+<td style="text-align: right;">5683.75</td>
+<td style="text-align: right;">8241.04</td>
+<td style="text-align: left;">▁▅▇▃▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num_Funcionarios</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">29.80</td>
+<td style="text-align: right;">5.41</td>
+<td style="text-align: right;">13.00</td>
+<td style="text-align: right;">26.00</td>
+<td style="text-align: right;">30.00</td>
+<td style="text-align: right;">33.00</td>
+<td style="text-align: right;">49.00</td>
+<td style="text-align: left;">▁▅▇▃▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Preco_Medio</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">19.94</td>
+<td style="text-align: right;">4.97</td>
+<td style="text-align: right;">5.76</td>
+<td style="text-align: right;">16.72</td>
+<td style="text-align: right;">19.79</td>
+<td style="text-align: right;">23.31</td>
+<td style="text-align: right;">37.11</td>
+<td style="text-align: left;">▁▆▇▃▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Estoque_Medio</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">10008.80</td>
+<td style="text-align: right;">1952.00</td>
+<td style="text-align: right;">2529.38</td>
+<td style="text-align: right;">8708.73</td>
+<td style="text-align: right;">9967.95</td>
+<td style="text-align: right;">11352.93</td>
+<td style="text-align: right;">17090.92</td>
+<td style="text-align: left;">▁▃▇▃▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Marketing_Total</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">2515.15</td>
+<td style="text-align: right;">541.81</td>
+<td style="text-align: right;">779.03</td>
+<td style="text-align: right;">2145.23</td>
+<td style="text-align: right;">2529.74</td>
+<td style="text-align: right;">2883.68</td>
+<td style="text-align: right;">3990.87</td>
+<td style="text-align: left;">▁▃▇▆▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="limpeza-de-dados" class="level4" data-number="2.1.0.1">
+<h4 data-number="2.1.0.1" class="anchored" data-anchor-id="limpeza-de-dados"><span class="header-section-number">2.1.0.1</span> Limpeza de dados</h4>
+<p>A base conta, originalmente, com 943 observações. Dentre as observações, constatamos a ausência de alguns valores (dados NA), as quais serão removidas, a saber:</p>
+<ul>
+<li><p>10 linhas sem dados de publicidade;</p></li>
+<li><p>10 linhas sem dados de preço médio;</p></li>
+<li><p>5 linhas sem dados de estoque médio;</p></li>
+</ul>
+<p>Além disso, identificamos que os dados não foram automaticamente lidos como categóricos, assim, convertemos as variáveis qualitativas abaixo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Removendo os dados NA</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(dados)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>dados<span class="sc">$</span>Promocoes <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dados<span class="sc">$</span>Promocoes)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>dados<span class="sc">$</span>Localizacao <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dados<span class="sc">$</span>Localizacao)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>dados<span class="sc">$</span>Tipo_Supermercado <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dados<span class="sc">$</span>Tipo_Supermercado)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(dados)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">dados</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">918</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 11%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">ordered</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: left;">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Promocoes</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Sim: 652, Não: 266</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Localizacao</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Cen: 460, Bai: 375, Zon: 83</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo_Supermercado</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Gra: 383, Méd: 374, Peq: 161</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Vendas</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8974.93</td>
+<td style="text-align: right;">2459.18</td>
+<td style="text-align: right;">646.84</td>
+<td style="text-align: right;">7329.78</td>
+<td style="text-align: right;">9059.82</td>
+<td style="text-align: right;">10597.28</td>
+<td style="text-align: right;">18123.07</td>
+<td style="text-align: left;">▁▃▇▂▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Publicidade</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5024.18</td>
+<td style="text-align: right;">993.54</td>
+<td style="text-align: right;">2190.23</td>
+<td style="text-align: right;">4384.88</td>
+<td style="text-align: right;">5009.21</td>
+<td style="text-align: right;">5681.12</td>
+<td style="text-align: right;">8241.04</td>
+<td style="text-align: left;">▁▅▇▃▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num_Funcionarios</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">29.81</td>
+<td style="text-align: right;">5.42</td>
+<td style="text-align: right;">13.00</td>
+<td style="text-align: right;">26.00</td>
+<td style="text-align: right;">30.00</td>
+<td style="text-align: right;">33.00</td>
+<td style="text-align: right;">49.00</td>
+<td style="text-align: left;">▁▅▇▃▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Preco_Medio</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">19.92</td>
+<td style="text-align: right;">4.96</td>
+<td style="text-align: right;">5.76</td>
+<td style="text-align: right;">16.69</td>
+<td style="text-align: right;">19.76</td>
+<td style="text-align: right;">23.31</td>
+<td style="text-align: right;">37.11</td>
+<td style="text-align: left;">▁▆▇▃▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Estoque_Medio</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10000.70</td>
+<td style="text-align: right;">1953.17</td>
+<td style="text-align: right;">2529.38</td>
+<td style="text-align: right;">8707.12</td>
+<td style="text-align: right;">9967.95</td>
+<td style="text-align: right;">11340.25</td>
+<td style="text-align: right;">17090.92</td>
+<td style="text-align: left;">▁▃▇▃▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Marketing_Total</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2513.92</td>
+<td style="text-align: right;">543.99</td>
+<td style="text-align: right;">779.03</td>
+<td style="text-align: right;">2144.78</td>
+<td style="text-align: right;">2528.95</td>
+<td style="text-align: right;">2884.28</td>
+<td style="text-align: right;">3990.87</td>
+<td style="text-align: left;">▁▃▇▆▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dadosNum <span class="ot">&lt;-</span> <span class="fu">select</span>(dados, <span class="sc">-</span><span class="fu">c</span>(Promocoes, Localizacao, Tipo_Supermercado))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="observações" class="level4" data-number="2.1.0.2">
+<h4 data-number="2.1.0.2" class="anchored" data-anchor-id="observações"><span class="header-section-number">2.1.0.2</span> Observações</h4>
+<p>Após a remoção das linhas com dados inválidos, ficamos com 918 observações válidas. As variáveis se distribuem em 6 variáveis quantitativas e 3 variáveis qualitativas.</p>
+<p>As variáveis qualitativas exibiram as seguintes distribuições aproximadas:</p>
+<ul>
+<li><p>71% dos supermercados realizam promoções, o restante não realiza;</p></li>
+<li><p>50% dos supermercados estão localizados nos centros dos municípios, 40% estão localizados nas periferias dos municípios, e os 10% restantes estão localizados nas zonas rurais;</p></li>
+<li><p>42% dos supermercados são de grande porte, 41% são de médio porte, e os 17% restante é de pequeno porte.</p></li>
+</ul>
+<p>Separamos os dados numéricos dos dados qualitativos para observar as correlações entre variáveis. O plot abaixo traz uma visualização conveniente dos dados.</p>
+</section>
+<section id="análise-de-correlação" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="análise-de-correlação"><span class="header-section-number">2.1.1</span> Análise de correlação</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>corr_vis <span class="ot">&lt;-</span> <span class="fu">ggpairs</span>(dadosNum, <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(dadosNum), <span class="at">progress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>corr_vis</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="observações-1" class="level4" data-number="2.1.1.1">
+<h4 data-number="2.1.1.1" class="anchored" data-anchor-id="observações-1"><span class="header-section-number">2.1.1.1</span> Observações</h4>
+<p>Em uma análise superficial, identificamos ausência de fortes correlações entre a variável dependente <code>Vendas</code> e as outra variáveis independentes.</p>
+<p>O máximo de correlação linear observada envolvendo a variável de interesse <code>Vendas</code>, foi de 46,2% de correlação com a variável <code>Estoque Médio</code>, indicando média correlação</p>
+<p>O máximo de correlação linear observada entre duas variáveis quaisquer foi de 93,2% entre as variáveis de <code>Marketing</code> e <code>Publicidade</code>, indicando forte correlação. Além disso, como o valor de correlação entre essas variáveis independentes é superior a 90%, isso indica a possibilidade de multicolinearidade, em que ambas as variáveis contém o mesmo nível de informação.</p>
+<p>O gráfico também permite ver indícios de que as variáveis apresentam distribuição normal, o que será verificado à frente quando observarmos se são válidas as suposições do MRLM.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="ajustando-os-modelos" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Ajustando os modelos</h1>
+<section id="modelo-inicial-m1---todos-os-dados-numéricos" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="modelo-inicial-m1---todos-os-dados-numéricos"><span class="header-section-number">3.1</span> Modelo Inicial M1 - Todos os dados numéricos</h2>
+<section id="analisando-o-vif-variance-inflation-factor-para-determinar-se-existe-multicolinearidade" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="analisando-o-vif-variance-inflation-factor-para-determinar-se-existe-multicolinearidade"><span class="header-section-number">3.1.1</span> Analisando o VIF (Variance Inflation Factor) para determinar se existe multicolinearidade</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Vendas <span class="sc">~</span> ., <span class="at">data =</span> dadosNum)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(m1)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Publicidade Num_Funcionarios      Preco_Medio    Estoque_Medio 
+        7.597582         1.004518         1.008155         1.004194 
+ Marketing_Total 
+        7.596296 </code></pre>
+</div>
+</div>
+<p>Seguindo o que foi apontado anteriormente, pode-se observar VIF superior a 5 para as variáveis <code>Publicidade</code> e <code>Marketing_Total</code>. Isso indica possibilidade de multicolinearidade entre as mesmas. A seguir, realizaremos o ajuste do modelo de regressão linear múltipla, e avaliaremos a necessidade de remover uma das variáveis.</p>
+</section>
+<section id="resumo-do-modelo-inicial-m1" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="resumo-do-modelo-inicial-m1"><span class="header-section-number">3.1.2</span> Resumo do Modelo Inicial M1</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Vendas ~ ., data = dadosNum)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7304.6 -1334.1     2.3  1411.2  5328.7 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      -215.90732  634.64439  -0.340 0.733783    
+Publicidade         1.38106    0.17801   7.758 2.30e-14 ***
+Num_Funcionarios   57.35740   11.87471   4.830 1.60e-06 ***
+Preco_Medio      -102.39390   12.98843  -7.883 9.06e-15 ***
+Estoque_Medio       0.54943    0.03292  16.690  &lt; 2e-16 ***
+Marketing_Total    -1.15854    0.32509  -3.564 0.000384 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1943 on 912 degrees of freedom
+Multiple R-squared:  0.3791,    Adjusted R-squared:  0.3757 
+F-statistic: 111.4 on 5 and 912 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>A partir do resultado do ajuste do primeiro modelo de regressão, podemos notar que todas as variáveis independentes parecem explicar a variável dependente Vendas. Tendo valores-p entre 0 e 0,001. No entanto, as variáveis no geral não explicam de forma significativa o valor de vendas, isso pode ser constatado através do resultado do Coefieciente de determinação ajustado (Adjusted R-Squared) que é de 0.3757.</p>
+<p>É notável, também, que as variáveis Num_Funcionarios e Preco_Medio tem erros padrões elevados em relação aos erros das outras variáveis.</p>
+<p>Considerando nossa suspeita inicial de multicolinearidade entre as variáveis Marketing_Total e Publicidade, é possível que as mesmas tenham efeito detrimental sobre a determinação do modelo, sendo observável mais um indício de multicolinearidade que são seus sinais opostos, induzindo à falsa ideia de proporcinalmente inversos. Assim, diagnosticamos a existência de multicolinearidade e, a seguir, selecionaremos uma delas para ser removida para verificar o impacto.</p>
+</section>
+</section>
+<section id="m2-e-m3---ajuste-de-modelo-com-dados-numéricos" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="m2-e-m3---ajuste-de-modelo-com-dados-numéricos"><span class="header-section-number">3.2</span> M2 e M3 - Ajuste de modelo com dados numéricos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">update</span>(m1, <span class="sc">~</span> . <span class="sc">-</span>Marketing_Total) <span class="co"># Modelo sem dados de marketing</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Vendas ~ Publicidade + Num_Funcionarios + Preco_Medio + 
+    Estoque_Medio, data = dadosNum)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7220.6 -1384.0    17.6  1361.9  5556.1 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      -128.81559  638.22441  -0.202     0.84    
+Publicidade         0.79012    0.06516  12.127  &lt; 2e-16 ***
+Num_Funcionarios   56.47218   11.94795   4.727 2.64e-06 ***
+Preco_Medio      -103.22775   13.06927  -7.899 8.08e-15 ***
+Estoque_Medio       0.55067    0.03313  16.622  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1955 on 913 degrees of freedom
+Multiple R-squared:  0.3705,    Adjusted R-squared:  0.3677 
+F-statistic: 134.3 on 4 and 913 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(m2)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Publicidade Num_Funcionarios      Preco_Medio    Estoque_Medio 
+        1.004991         1.004078         1.007828         1.004082 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">update</span>(m1, <span class="sc">~</span> . <span class="sc">-</span>Publicidade) <span class="co"># Modelo sem dados de publicidade</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Vendas ~ Num_Funcionarios + Preco_Medio + Estoque_Medio + 
+    Marketing_Total, data = dadosNum)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7423.4 -1444.6    52.9  1347.1  6364.0 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       788.84032  641.11442   1.230    0.219    
+Num_Funcionarios   55.78288   12.25181   4.553 6.00e-06 ***
+Preco_Medio      -102.10043   13.40280  -7.618 6.44e-14 ***
+Estoque_Medio       0.55630    0.03396  16.382  &lt; 2e-16 ***
+Marketing_Total     1.19088    0.12201   9.761  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2005 on 913 degrees of freedom
+Multiple R-squared:  0.3382,    Adjusted R-squared:  0.3353 
+F-statistic: 116.6 on 4 and 913 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(m3)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Num_Funcionarios      Preco_Medio    Estoque_Medio  Marketing_Total 
+        1.004224         1.008147         1.003467         1.004821 </code></pre>
+</div>
+</div>
+<section id="comentário" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="comentário"><span class="header-section-number">3.2.1</span> Comentário</h3>
+<p>Pode-se observar que para ambos os modelos, os valores de VIF foram reduzidos em relação ao modelo inicial. Desta forma selecionaremos o modelo <code>m2</code>, sem a variável <code>Marketing</code>, pois este apresentou uma performance ligeiramente melhor em relação ao R-Squared (0.36 versus 0.33). Também observamos que as variáveis restantes não apresentam multicolinearidade.</p>
+</section>
+</section>
+<section id="m4-e-m4---modelo-considerando-variáveis-qualitativas" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="m4-e-m4---modelo-considerando-variáveis-qualitativas"><span class="header-section-number">3.3</span> M4 e M4 - Modelo considerando variáveis Qualitativas</h2>
+<p>É possível que nosso modelo seja impactado por diferenças de correlação causadas por variáveis qualitativas. Para verificar se esse é o caso, examinaremos agora os dados em relação às mesmas.</p>
+<section id="análise-de-correlação-1" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="análise-de-correlação-1"><span class="header-section-number">3.3.1</span> Análise de Correlação</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>promocoes <span class="ot">&lt;-</span> dados <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Localizacao, Tipo_Supermercado))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>promocoes <span class="ot">&lt;-</span> promocoes <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Promocoes, <span class="fu">everything</span>(), Promocoes)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>graf2 <span class="ot">&lt;-</span> <span class="fu">ggpairs</span>(promocoes, <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(promocoes), ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">colour=</span>Promocoes), <span class="at">progress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(graf2)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="1440"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>localizacao <span class="ot">&lt;-</span> dados <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Tipo_Supermercado, Promocoes))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>localizacao <span class="ot">&lt;-</span> localizacao <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Localizacao, <span class="fu">everything</span>(), Localizacao)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>graf2 <span class="ot">&lt;-</span> <span class="fu">ggpairs</span>(localizacao, <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(localizacao), ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">colour=</span>Localizacao), <span class="at">progress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(graf2)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="1440"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tipoMercado <span class="ot">&lt;-</span> dados <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Localizacao, Promocoes))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>tipoMercado <span class="ot">&lt;-</span> tipoMercado <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Tipo_Supermercado, <span class="fu">everything</span>(), Tipo_Supermercado)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>graf2 <span class="ot">&lt;-</span> <span class="fu">ggpairs</span>(tipoMercado, <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tipoMercado), ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">colour=</span>Tipo_Supermercado), <span class="at">progress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(graf2)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="1440"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="análise-do-vif" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="análise-do-vif"><span class="header-section-number">3.3.2</span> Análise do VIF</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Vendas <span class="sc">~</span> ., <span class="at">data =</span> dados <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Marketing_Total)))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(m4)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      GVIF Df GVIF^(1/(2*Df))
+Publicidade       1.012820  1        1.006389
+Num_Funcionarios  1.010229  1        1.005101
+Preco_Medio       1.014624  1        1.007285
+Promocoes         1.018778  1        1.009345
+Localizacao       1.015217  2        1.003783
+Tipo_Supermercado 1.017733  2        1.004404
+Estoque_Medio     1.006773  1        1.003381</code></pre>
+</div>
+</div>
+</section>
+<section id="resumo-do-modelo" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="resumo-do-modelo"><span class="header-section-number">3.3.3</span> Resumo do modelo</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m4)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Vendas ~ ., data = dados %&gt;% select(-c(Marketing_Total)))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6640.7 -1372.2     4.2  1360.7  5725.9 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)               158.20576  636.58647   0.249   0.8038    
+Publicidade                 0.80411    0.06398  12.568  &lt; 2e-16 ***
+Num_Funcionarios           55.73115   11.72282   4.754 2.32e-06 ***
+Preco_Medio              -107.26902   12.82695  -8.363 2.29e-16 ***
+PromocoesSim              289.70142  140.45871   2.063   0.0394 *  
+LocalizacaoCentro        -112.12911  133.79691  -0.838   0.4022    
+LocalizacaoZona Rural      27.88817  232.38442   0.120   0.9045    
+Tipo_SupermercadoMédio   -758.85730  139.64512  -5.434 7.07e-08 ***
+Tipo_SupermercadoPequeno -912.85774  180.39649  -5.060 5.07e-07 ***
+Estoque_Medio               0.55691    0.03245  17.163  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1913 on 908 degrees of freedom
+Multiple R-squared:  0.401, Adjusted R-squared:  0.395 
+F-statistic: 67.54 on 9 and 908 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>A partir do resumo obtido acima, verificamos que as variáveis independentes <code>Tipo_Supermercado</code> e <code>Promocoes</code>são estatisticamente significantes para a variável resposta <code>Vendas</code>, e que a variável qualitativa independente <code>Localizacao</code> é insignificante estatisticamente. Assim, removeremos a variável insignificante para simplificar o modelo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span>  dados <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Marketing_Total, Localizacao))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Vendas <span class="sc">~</span> ., <span class="at">data=</span>dados)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="selecionando-o-melhor-modelo" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Selecionando o melhor modelo</h1>
+<section id="medida-aic" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="medida-aic"><span class="header-section-number">4.1</span> Medida AIC</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(m1) <span class="co"># modelo inicial com dados numéricos</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16515.33</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(m2) <span class="co"># modelo com dados numéricos removendo Marketing</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16526.02</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(m4) <span class="co"># modelo com todos os dados</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16490.45</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(m5) <span class="co"># modelo com todos os dados menos localização</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16487.33</code></pre>
+</div>
+</div>
+<p>Entre os modelos considerados, observa-se melhora significativa (redução de pelo menos 10 unidades) entre os modelos que usam dados qualitativos (m4,m5), em relação aos que não usam (m1,m2). Os modelos com dados quantitativos não apresentam diferença significativa entre si, e escolhemos arbitrariamente o modelo M5 pela simplicidade adicional.</p>
+</section>
+<section id="tabela-anova" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="tabela-anova"><span class="header-section-number">4.2</span> Tabela ANOVA</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m4, m5)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: Vendas ~ Publicidade + Num_Funcionarios + Preco_Medio + Promocoes + 
+    Localizacao + Tipo_Supermercado + Estoque_Medio
+Model 2: Vendas ~ Publicidade + Num_Funcionarios + Preco_Medio + Promocoes + 
+    Tipo_Supermercado + Estoque_Medio
+  Res.Df        RSS Df Sum of Sq      F Pr(&gt;F)
+1    908 3321928139                           
+2    910 3325094320 -2  -3166181 0.4327 0.6489</code></pre>
+</div>
+</div>
+<p>Considerando que o p-valor obtido (0.6489) é superior ao nível de significância determinado ao início do relatório, estabelecemos que a inclusão da variável <code>Localizacao</code> não traz impacto significativo para o modelo de regressão. Assim, pelo princípio da parcimônia, optamos por selecionar o modelo mais simples, sem <code>Localizacao,</code> o m5.</p>
+</section>
+</section>
+<section id="modelo-selecionado-m5" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Modelo selecionado: M5</h1>
+<p>Tendo selecionado o modelo mais adequado disponível a partir dos dados fornecidos, realizaremos agora uma verificação dos pressupostos de um MRLM para o modelo M5.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m5)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="RelatorioEstatistica_files/figure-html/unnamed-chunk-19-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="análise-de-pressupostos" class="level3" data-number="5.0.1">
+<h3 data-number="5.0.1" class="anchored" data-anchor-id="análise-de-pressupostos"><span class="header-section-number">5.0.1</span> Análise de pressupostos</h3>
+<section id="residual-vs-fitted" class="level4" data-number="5.0.1.1">
+<h4 data-number="5.0.1.1" class="anchored" data-anchor-id="residual-vs-fitted"><span class="header-section-number">5.0.1.1</span> Residual vs Fitted</h4>
+<p>O gráfico observado não apresenta fortes tendências de linearidade, e apresenta levíssimas tendências de heterocedasticidade, com a variância aumentando ao centro do eixo x. Acreditamos que a variação não tem grande impacto na predição, dado não ser acentuada, assim consideramos verificado o pressuposto de homocedasticidade.</p>
+</section>
+<section id="qq-plot" class="level4" data-number="5.0.1.2">
+<h4 data-number="5.0.1.2" class="anchored" data-anchor-id="qq-plot"><span class="header-section-number">5.0.1.2</span> QQ Plot</h4>
+<p>O gráfico não tem sinal de enviesamento, sugerindo uma distribuição normal dos resíduos, sendo verificado o pressuposto.</p>
+</section>
+<section id="scale-location" class="level4" data-number="5.0.1.3">
+<h4 data-number="5.0.1.3" class="anchored" data-anchor-id="scale-location"><span class="header-section-number">5.0.1.3</span> Scale-Location</h4>
+<p>Os pontos do gráfico aparentam estar distribuídos aleatoriamente ao redor da linha do modelo, que não tem direção enviesada, indicando novamente homocedasticidade.</p>
+</section>
+<section id="residual-vs-leverage" class="level4" data-number="5.0.1.4">
+<h4 data-number="5.0.1.4" class="anchored" data-anchor-id="residual-vs-leverage"><span class="header-section-number">5.0.1.4</span> Residual vs Leverage</h4>
+<p>Observa-se, finalmente, boa densidade do gráfico em um cluster à esquerda, no entanto, observamos pontos abaixo de -3, que indica a existência de outliers influentes, mesmo estando abaixo da diatância de Cook. Por estarem abaixo da distância computada, consideramos que não há necessidade de correção do modelo por inconsistência da base de dados, pois os dados aparentam seguir uma variabilidade naturalmente alta.</p>
+</section>
+</section>
+<section id="interpretação-do-modelo" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="interpretação-do-modelo"><span class="header-section-number">5.1</span> Interpretação do modelo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(report)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(m5)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>We fitted a linear model (estimated using OLS) to predict Vendas with
+Publicidade, Num_Funcionarios, Preco_Medio, Promocoes, Tipo_Supermercado and
+Estoque_Medio (formula: Vendas ~ Publicidade + Num_Funcionarios + Preco_Medio +
+Promocoes + Tipo_Supermercado + Estoque_Medio). The model explains a
+statistically significant and substantial proportion of variance (R2 = 0.40,
+F(7, 910) = 86.82, p &lt; .001, adj. R2 = 0.40). The model's intercept,
+corresponding to Publicidade = 0, Num_Funcionarios = 0, Preco_Medio = 0,
+Promocoes = Não, Tipo_Supermercado = Grande and Estoque_Medio = 0, is at 124.46
+(95% CI [-1118.03, 1366.95], t(910) = 0.20, p = 0.844). Within this model:
+
+  - The effect of Publicidade is statistically significant and positive (beta =
+0.80, 95% CI [0.68, 0.93], t(910) = 12.56, p &lt; .001; Std. beta = 0.32, 95% CI
+[0.27, 0.37])
+  - The effect of Num Funcionarios is statistically significant and positive
+(beta = 55.66, 95% CI [32.68, 78.64], t(910) = 4.75, p &lt; .001; Std. beta =
+0.12, 95% CI [0.07, 0.17])
+  - The effect of Preco Medio is statistically significant and negative (beta =
+-107.43, 95% CI [-132.58, -82.28], t(910) = -8.38, p &lt; .001; Std. beta = -0.22,
+95% CI [-0.27, -0.17])
+  - The effect of Promocoes [Sim] is statistically significant and positive (beta
+= 298.88, 95% CI [24.07, 573.68], t(910) = 2.13, p = 0.033; Std. beta = 0.12,
+95% CI [9.79e-03, 0.23])
+  - The effect of Tipo Supermercado [Médio] is statistically significant and
+negative (beta = -765.04, 95% CI [-1038.59, -491.49], t(910) = -5.49, p &lt; .001;
+Std. beta = -0.31, 95% CI [-0.42, -0.20])
+  - The effect of Tipo Supermercado [Pequeno] is statistically significant and
+negative (beta = -907.38, 95% CI [-1260.98, -553.78], t(910) = -5.04, p &lt; .001;
+Std. beta = -0.37, 95% CI [-0.51, -0.23])
+  - The effect of Estoque Medio is statistically significant and positive (beta =
+0.56, 95% CI [0.49, 0.62], t(910) = 17.15, p &lt; .001; Std. beta = 0.44, 95% CI
+[0.39, 0.49])
+
+Standardized parameters were obtained by fitting the model on a standardized
+version of the dataset. 95% Confidence Intervals (CIs) and p-values were
+computed using a Wald t-distribution approximation.</code></pre>
+</div>
+</div>
+<p><strong><em>Em português:</em></strong></p>
+<p>Ajustamos um modelo linear (estimado usando MQO) para prever Vendas com Publicidade, Num_Funcionarios, Preco_Medio, Promocoes, Tipo_Supermercado e Estoque_Medio (fórmula: Vendas ~ Publicidade + Num_Funcionarios + Preco_Medio + Promocoes + Tipo_Supermercado + Estoque_Medio). O modelo explica uma proporção estatisticamente significativa e substancial da variância (R² = 0.40, F(7, 910) = 86.82, p &lt; 0.001, R² ajustado = 0.40). O intercepto do modelo, correspondendo a Publicidade = 0, Num_Funcionarios = 0, Preco_Medio = 0, Promocoes = Não, Tipo_Supermercado = Grande e Estoque_Medio = 0, está em 124.46 (IC 95% [-1118.03, 1366.95], t(910) = 0.20, p = 0.844). Dentro deste modelo:</p>
+<ul>
+<li><p>O efeito da Publicidade é estatisticamente significativo e positivo (beta = 0.80, IC 95% [0.68, 0.93], t(910) = 12.56, p &lt; 0.001; beta padronizado = 0.32, IC 95% [0.27, 0.37])</p></li>
+<li><p>O efeito de Num_Funcionarios é estatisticamente significativo e positivo (beta = 55.66, IC 95% [32.68, 78.64], t(910) = 4.75, p &lt; 0.001; beta padronizado = 0.12, IC 95% [0.07, 0.17])</p></li>
+<li><p>O efeito de Preco_Medio é estatisticamente significativo e negativo (beta = -107.43, IC 95% [-132.58, -82.28], t(910) = -8.38, p &lt; 0.001; beta padronizado = -0.22, IC 95% [-0.27, -0.17])</p></li>
+<li><p>O efeito de Promocoes [Sim] é estatisticamente significativo e positivo (beta = 298.88, IC 95% [24.07, 573.68], t(910) = 2.13, p = 0.033; beta padronizado = 0.12, IC 95% [0.01, 0.23])</p></li>
+<li><p>O efeito de Tipo_Supermercado [Médio] é estatisticamente significativo e negativo (beta = -765.04, IC 95% [-1038.59, -491.49], t(910) = -5.49, p &lt; 0.001; beta padronizado = -0.31, IC 95% [-0.42, -0.20])</p></li>
+<li><p>O efeito de Tipo_Supermercado [Pequeno] é estatisticamente significativo e negativo (beta = -907.38, IC 95% [-1260.98, -553.78], t(910) = -5.04, p &lt; 0.001; beta padronizado = -0.37, IC 95% [-0.51, -0.23])</p></li>
+<li><p>O efeito de Estoque_Medio é estatisticamente significativo e positivo (beta = 0.56, IC 95% [0.49, 0.62], t(910) = 17.15, p &lt; 0.001; beta padronizado = 0.44, IC 95% [0.39, 0.49])</p></li>
+</ul>
+<p>Os parâmetros padronizados foram obtidos ajustando o modelo a uma versão padronizada do conjunto de dados. Os Intervalos de Confiança de 95% (ICs) e os valores-p foram calculados usando uma aproximação da distribuição t de Wald.</p>
+</section>
+</section>
+<section id="previsões" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Previsões</h1>
+<p>Para realizar previsões sobre valores para a variável resposta, recomenda-se o uso de valores para as variáveis explicativas dentro dos respectivos intervalos observados. Daí a importância de um breve resumo sobre os dados observados:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Vendas         Publicidade   Num_Funcionarios  Preco_Medio     Promocoes
+ Min.   :  646.8   Min.   :2190   Min.   :13.00    Min.   : 5.757   Não:266  
+ 1st Qu.: 7329.8   1st Qu.:4385   1st Qu.:26.00    1st Qu.:16.688   Sim:652  
+ Median : 9059.8   Median :5009   Median :30.00    Median :19.765            
+ Mean   : 8974.9   Mean   :5024   Mean   :29.81    Mean   :19.920            
+ 3rd Qu.:10597.3   3rd Qu.:5681   3rd Qu.:33.00    3rd Qu.:23.310            
+ Max.   :18123.1   Max.   :8241   Max.   :49.00    Max.   :37.105            
+ Tipo_Supermercado Estoque_Medio  
+ Grande :383       Min.   : 2529  
+ Médio  :374       1st Qu.: 8707  
+ Pequeno:161       Median : 9968  
+                   Mean   :10001  
+                   3rd Qu.:11340  
+                   Max.   :17091  </code></pre>
+</div>
+</div>
+<p>Agora, suponha que temos por objetivo prever os valores de <code>Vendas</code> considerando os seguintes valores para as variáveis explicativas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>novas.preditoras <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Publicidade=</span><span class="fu">c</span>(<span class="dv">5050</span>, <span class="dv">4900</span>),</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Num_Funcionarios=</span><span class="fu">c</span>(<span class="dv">13</span>, <span class="dv">25</span>),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Preco_Medio=</span><span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Promocoes=</span><span class="fu">c</span>(<span class="st">'Sim'</span>, <span class="st">'Não'</span>),</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Tipo_Supermercado=</span><span class="fu">c</span>(<span class="st">'Grande'</span>, <span class="st">'Pequeno'</span>),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Estoque_Medio=</span><span class="fu">c</span>(<span class="dv">2564</span>, <span class="dv">10040</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>novas.preditoras <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 21%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Publicidade</th>
+<th style="text-align: right;">Num_Funcionarios</th>
+<th style="text-align: right;">Preco_Medio</th>
+<th style="text-align: left;">Promocoes</th>
+<th style="text-align: left;">Tipo_Supermercado</th>
+<th style="text-align: right;">Estoque_Medio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">5050</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Sim</td>
+<td style="text-align: left;">Grande</td>
+<td style="text-align: right;">2564</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4900</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">Não</td>
+<td style="text-align: left;">Pequeno</td>
+<td style="text-align: right;">10040</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="predição-pontual" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="predição-pontual"><span class="header-section-number">6.1</span> Predição Pontual</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m5, novas.preditoras)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1        2 
+5549.379 7972.139 </code></pre>
+</div>
+</div>
+<p>Acima, temos as previsões pontuais dos dados das variáveis preditoras selecionadas.</p>
+</section>
+<section id="intervalo-de-confiança" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="intervalo-de-confiança"><span class="header-section-number">6.2</span> Intervalo de Confiança</h2>
+<p>Um&nbsp;<strong>intervalo de confiança</strong>&nbsp;captura a incerteza em torno dos&nbsp;<strong>valores médios (valores esperados / o parâmetro média)</strong>&nbsp;preditos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m5, novas.preditoras,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"confidence"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 5549.379 4847.752 6251.006
+2 7972.139 7611.028 8333.250</code></pre>
+</div>
+</div>
+<p>Nota-se no intervalo de confiança obtido que para a <strong>primeira observação (1)</strong> o valor esperado é algo entre <em>4847,752 e 6251,006.</em> E para a <strong>segunda</strong> <strong>observação (2)</strong> o valor esperado é algo entre <em>7611,028 e 8333,250.</em></p>
+</section>
+<section id="intervalo-de-prediçãoprevisão" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="intervalo-de-prediçãoprevisão"><span class="header-section-number">6.3</span> Intervalo de Predição/Previsão</h2>
+<p>Um&nbsp;<strong>intervalo de predição/previsão</strong>&nbsp;captura a incerteza em torno de um&nbsp;<strong>único valor</strong>&nbsp;não observado na base de dados e não em torno do seu&nbsp;<strong>valor médio/esperado</strong>&nbsp;o qual é obtido pelas variáveis preditoras observadas na base de dados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m5, novas.preditoras,</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"prediction"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr       upr
+1 5549.379 1732.811  9365.947
+2 7972.139 4203.278 11741.000</code></pre>
+</div>
+</div>
+<p>Observa-se que o intervalo de predição é mais amplo do que o intervalo de confiança, pois considera a incerteza em torno de um valor individual não observado na base de dados. De acordo com os dados obtidos espera-se que um novo valor esteja entre <em>1732.811 e 9363.947</em> para a <strong>primeira observação (1)</strong>, esteja entre 4203.278 e 11741.000 para a <strong>segunda observação (2)</strong>.</p>
+<p><strong><em>Interpretação</em></strong></p>
+<p><em>Intervalo de Confiança:</em> A incerteza em torno do valor médio esperado é relativamente menor, com intervalos mais estreitos. Isso sugere que o modelo tem boa precisão ao estimar a média da variável resposta para as combinações de preditoras fornecidas. Já o intervalo de predição é consideravelmente mais amplo, refletindo a maior incerteza envolvida na previsão de valores individuais. Isso é esperado, pois além da variabilidade do modelo, ele também incorpora a variabilidade natural entre observações individuais.</p>
+</section>
+</section>
+<section id="conclusão" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Conclusão</h1>
+<p>Após análise exploratória dos dados, foi constatada uma ausência de forte correlação entre as variáveis independentes disponíveis e a variável dependente <code>Vendas</code>. Além disso, foi visto um leve problema de colinearidade entre as variaveis <code>Publicidade</code> e <code>Marketing_Total</code>, além da baixa descritividade da variável <code>Localizacao</code> sobre a variável explicada.</p>
+<p>Após análise, <code>Marketing_Total</code> e <code>Localizacao</code> foram removidas para geração de modelo de regressão adequado, mas apesar de termos ajustado o modelo selecionando as variáveis que nos trouxeram melhorias em relação ao R, e dos dados seguirem os pressupostos esperados para um MRLM, nosso modelo seguiu com pouca descritividade em relação aos dados, obtendo um valor R estimado em 0.395.</p>
+<p>Isso se dá, possivelmente, ao baixo grau de correlação observado entre a variável resposta <code>Vendas</code> e as outras variáveis que a tentam explicar. Observamos um grau máximo de correlação de 0.462 entre a variável <code>Vendas</code> e a variável <code>Estoque_Médio</code>, o que faz sentido pois um supermercado que faz mais vendas possivelmente mantém um maior estoque para completar as vendas, porém não necessariamente isso descreve com grande detalhe todo o cenário de vendas do estabelecimento.</p>
+<p>Em relação às variáveis incluídas no modelo e seus impactos na previsão, temos o seguinte:</p>
+<ul>
+<li><p><code>Tipo_Supermercado</code>: para os três tipos de supermercado, foi possível observar que o porte do supermercado tem grande influência no montante de vendas, o que faz sentido dado que um supermercado maior tem mais clientes e mais produtos. Em relação à base (supermercado grande), um supermercado ser médio traz um impacto de -R$759,00 em vendas, enquanto um pequeno tem redução de R$913,00.</p></li>
+<li><p><code>Promocoes</code>: como esperado pelo bom senso, a presença de promoções em supermercados têm impacto positivo sobre as vendas. A presença de promoções têm potencial de aumentar as vendas em aproximadamente R$: 290,00</p></li>
+<li><p><code>Estoque_Medio</code>: como descrito anteriormente, um estoque maior está positivamente correlacionado com mais vendas no supermercado. Especificamente, a cada unidade adicional no estoque, pode-se esperar um aumento de R$0.56 em vendas. O que é um valor pequeno, no entanto tende a crescer consideravelmente dado o grande volume de estoque observado na base. Por exemplo, um supermercado com o valor de estoque na média (R$10.000,00) tem R$5.600,00 das suas vendas explicadas apenas por estoque.</p></li>
+<li><p><code>Num_Funcionarios</code>: faz sentido esperar que com mais funcionários seja possível processar mais vendas, e isso é refletido em nosso modelo, onde cada funcionário adicional potencializa mais R$ 56.00 em vendas.</p></li>
+<li><p><code>Publicidade</code>: Sendo reconhecida ferramenta de auxílio à vendas, e de acordo com a base de dados, os efeitos da publicidade nas vendas é considerável. Possivelmente indicando que no contexto de supermercados, a publicidade é fator de influência sobre o consumidor. De acordo com o modelo, cada real adicional investido tem retorno de 80 centavos. O que, assim como no estoque, é um valor pequeno mas que é relevante dado ao alto valor investido em publicidade (em média R$5000,00, com impacto de +R$4.000,00 em vendas)</p></li>
+</ul>
+<p>Acreditamos que apesar da baixa descritividade do modelo, foi possível tomar conclusões interessantes sobre as variáveis, observando relacionamentos significativos. Acreditamos, também, que o modelo poderia ter resultados melhores se contasse com variáveis mais descritivas e correlacionadas à variável explicada.</p>
 </section>
 
 </main>
